@@ -51,7 +51,7 @@ pub fn configure(
 pub fn stake_realy(
     program_id: &Pubkey,
     siger: &Pubkey,
-    pay_token_account: &Pubkey, //sol wallet address, spl--token account
+    pay_token_account: &Pubkey, //realy token account address, spl--token account
     receiver: &Pubkey,
     config_info: &Pubkey,    
     args:StakeArgs,
@@ -76,7 +76,7 @@ pub fn stake_realy(
 pub fn unstake_realy(
     program_id: &Pubkey,
     siger: &Pubkey,
-    pay_token_account: &Pubkey, //sol wallet address, spl--token account
+    pay_token_account: &Pubkey, //esrealy token account address, spl--token account
     receiver: &Pubkey,
     config_info: &Pubkey,    
     args:UnstakeArgs,
