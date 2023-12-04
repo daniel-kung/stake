@@ -42,12 +42,12 @@ impl ConfigureData {
 
 #[repr(C)]
 #[derive(BorshSerialize, BorshDeserialize, Clone, Debug, Default, PartialEq)]
-pub struct MintEsrealyArgs {
+pub struct StakeArgs {
     pub amt: u64,
 }
 
 #[repr(C)]
 #[derive(BorshSerialize, BorshDeserialize, Clone, Debug, Default, PartialEq)]
-pub struct BackToRealyArgs {
+pub struct UnstakeArgs {
     pub amt: u64,
 }

@@ -6,8 +6,11 @@ use crate::instruction::*;
 pub mod configure;
 pub use configure::*;
 
-pub mod mint_esrealy;
-pub use mint_esrealy::*;
+pub mod stake;
+pub use stake::*;
+
+pub mod unstake;
+pub use unstake::*;
 
 pub fn process_instruction(
     program_id: &Pubkey,
@@ -20,9 +23,13 @@ pub fn process_instruction(
             msg!("Instruction: Configure");
             process_configure(program_id, accounts, args)
         }
-        AppInstruction::MintEsrealy(args) => {
-            msg!("Instruction: MintEsrealy");
-            process_mint_esrealy(program_id, accounts, args)
+        AppInstruction::Stake(args) => {
+            msg!("Instruction: Stake");
+            process_stake(program_id, accounts, args)
+        }
+        AppInstruction::Unstake(args) => {
+            msg!("Instruction: Unstake");
+            process_unstake(program_id, accounts, args)
         }
     }
 }

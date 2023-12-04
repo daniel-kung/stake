@@ -13,7 +13,8 @@ use crate::state::*;
 #[derive(Clone, Debug, BorshSerialize, BorshDeserialize, PartialEq)]
 pub enum AppInstruction {
     Configure(ConfigureArgs),
-    MintEsrealy(MintEsrealyArgs),
+    Stake(StakeArgs),
+    Unstake(UnstakeArgs)
 }
 
 pub fn configure(
@@ -47,19 +48,20 @@ pub fn configure(
     })
 }
 
-pub fn mint_esrealy(
+pub fn stake_realy(
     program_id: &Pubkey,
     siger: &Pubkey,
     pay_token_account: &Pubkey, //sol wallet address, spl--token account
-    token_program_info: &Pubkey,
-    receiver: &Pubkey,    
-    args:MintEsrealyArgs,
+    receiver: &Pubkey,
+    config_info: &Pubkey,    
+    args:StakeArgs,
 ) -> Result<Instruction, ProgramError> {
     let accounts = vec![
         AccountMeta::new(*siger, true),
         AccountMeta::new(*pay_token_account, false),
-        AccountMeta::new_readonly(*token_program_info, false),
-        AccountMeta::new(*receiver, false),      
+        AccountMeta::new(*receiver, false), 
+        AccountMeta::new(*config_info, false), 
+        AccountMeta::new_readonly(spl_token::id(), false),
         AccountMeta::new_readonly(rent::id(), false),  
         AccountMeta::new_readonly(system_program::id(), false),
     ];
@@ -67,6 +69,31 @@ pub fn mint_esrealy(
     Ok(Instruction {
         program_id: *program_id,
         accounts,
-        data: AppInstruction::MintEsrealy(args).try_to_vec().unwrap(),
+        data: AppInstruction::Stake(args).try_to_vec().unwrap(),
+    })
+}
+
+pub fn unstake_realy(
+    program_id: &Pubkey,
+    siger: &Pubkey,
+    pay_token_account: &Pubkey, //sol wallet address, spl--token account
+    receiver: &Pubkey,
+    config_info: &Pubkey,    
+    args:UnstakeArgs,
+) -> Result<Instruction, ProgramError> {
+    let accounts = vec![
+        AccountMeta::new(*siger, true),
+        AccountMeta::new(*pay_token_account, false),
+        AccountMeta::new(*receiver, false), 
+        AccountMeta::new(*config_info, false), 
+        AccountMeta::new_readonly(spl_token::id(), false),
+        AccountMeta::new_readonly(rent::id(), false),  
+        AccountMeta::new_readonly(system_program::id(), false),
+    ];
+    
+    Ok(Instruction {
+        program_id: *program_id,
+        accounts,
+        data: AppInstruction::Unstake(args).try_to_vec().unwrap(),
     })
 }
