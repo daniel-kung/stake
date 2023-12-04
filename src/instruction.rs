@@ -53,7 +53,10 @@ pub fn stake_realy(
     siger: &Pubkey,
     pay_token_account: &Pubkey, //realy token account address, spl--token account
     receiver: &Pubkey,
-    config_info: &Pubkey,    
+    config_info: &Pubkey,  
+    transfer_auth: &Pubkey,
+    realy_vault: &Pubkey,
+    esrealy_vault: &Pubkey,
     args:StakeArgs,
 ) -> Result<Instruction, ProgramError> {
     let accounts = vec![
@@ -61,6 +64,9 @@ pub fn stake_realy(
         AccountMeta::new(*pay_token_account, false),
         AccountMeta::new(*receiver, false), 
         AccountMeta::new(*config_info, false), 
+        AccountMeta::new(*transfer_auth, false),
+        AccountMeta::new(*realy_vault, false), 
+        AccountMeta::new(*esrealy_vault, false), 
         AccountMeta::new_readonly(spl_token::id(), false),
         AccountMeta::new_readonly(rent::id(), false),  
         AccountMeta::new_readonly(system_program::id(), false),
@@ -78,7 +84,10 @@ pub fn unstake_realy(
     siger: &Pubkey,
     pay_token_account: &Pubkey, //esrealy token account address, spl--token account
     receiver: &Pubkey,
-    config_info: &Pubkey,    
+    config_info: &Pubkey, 
+    transfer_auth: &Pubkey,
+    realy_vault: &Pubkey,
+    esrealy_vault: &Pubkey,   
     args:UnstakeArgs,
 ) -> Result<Instruction, ProgramError> {
     let accounts = vec![
@@ -86,6 +95,9 @@ pub fn unstake_realy(
         AccountMeta::new(*pay_token_account, false),
         AccountMeta::new(*receiver, false), 
         AccountMeta::new(*config_info, false), 
+        AccountMeta::new(*transfer_auth, false),
+        AccountMeta::new(*realy_vault, false), 
+        AccountMeta::new(*esrealy_vault, false), 
         AccountMeta::new_readonly(spl_token::id(), false),
         AccountMeta::new_readonly(rent::id(), false),  
         AccountMeta::new_readonly(system_program::id(), false),
