@@ -146,6 +146,6 @@ pub fn clean_realy(
     Ok(Instruction {
         program_id: *program_id,
         accounts,
-        data: AppInstruction::Unstake(args).try_to_vec().unwrap(),
+        data: AppInstruction::Clean(args).try_to_vec().unwrap(),
     })
 }
