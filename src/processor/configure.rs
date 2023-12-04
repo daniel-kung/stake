@@ -107,7 +107,7 @@ pub fn process_configure(
             transfer_auth,
             &authority_seed,
             rent_info,
-            args.max_supply,
+            args.max_supply * 1000000000,
         )?;
         is_created = false;
 
