@@ -3,6 +3,7 @@ use borsh::BorshSerialize;
 use solana_program::{
     account_info::{next_account_info, AccountInfo},
     entrypoint::ProgramResult,
+    msg,
     pubkey::Pubkey,
     sysvar,
 };
@@ -35,6 +36,7 @@ pub fn process_stake(
     assert_eq_pubkey(esrealy_vault, &config_data.esrealy_vault)?;
 
     //transfer realy to vault
+    msg!("transfer realy to vault");
     spl_token_transfer_invoke(
         token_program_info.clone(),
         pay_token_account.clone(),
@@ -44,6 +46,7 @@ pub fn process_stake(
     )?;
 
     //transfer esrealy to user
+    msg!("transfer out esrealy");
     spl_token_transfer_invoke(
         token_program_info.clone(),
         esrealy_vault.clone(),
