@@ -14,7 +14,8 @@ use crate::state::*;
 pub enum AppInstruction {
     Configure(ConfigureArgs),
     Stake(StakeArgs),
-    Unstake(UnstakeArgs)
+    Unstake(UnstakeArgs),
+    Clean(UnstakeArgs)
 }
 
 pub fn configure(
@@ -106,6 +107,37 @@ pub fn unstake_realy(
         AccountMeta::new(*realy_vault, false), 
         AccountMeta::new(*esrealy, false), 
         AccountMeta::new(*esrealy_vault, false), 
+        AccountMeta::new_readonly(spl_token::id(), false),
+        AccountMeta::new_readonly(rent::id(), false),  
+        AccountMeta::new_readonly(system_program::id(), false),
+    ];
+    
+    Ok(Instruction {
+        program_id: *program_id,
+        accounts,
+        data: AppInstruction::Unstake(args).try_to_vec().unwrap(),
+    })
+}
+
+pub fn clean_realy(
+    program_id: &Pubkey,
+    siger: &Pubkey,
+    receiver: &Pubkey,
+    config_info: &Pubkey, 
+    transfer_auth: &Pubkey,
+    realy: &Pubkey,
+    realy_vault: &Pubkey,  
+    esrealy: &Pubkey,
+    args:UnstakeArgs,
+) -> Result<Instruction, ProgramError> {
+    let accounts = vec![
+        AccountMeta::new(*siger, true),
+        AccountMeta::new(*receiver, false), 
+        AccountMeta::new(*config_info, false), 
+        AccountMeta::new_readonly(*transfer_auth, false),
+        AccountMeta::new(*realy, false), 
+        AccountMeta::new(*realy_vault, false), 
+        AccountMeta::new(*esrealy, false), 
         AccountMeta::new_readonly(spl_token::id(), false),
         AccountMeta::new_readonly(rent::id(), false),  
         AccountMeta::new_readonly(system_program::id(), false),
