@@ -109,8 +109,8 @@ pub fn process_configure(
             rent_info,
             args.max_supply,
         )?;
-
         is_created = false;
+
     }
 
     let mut config_data = ConfigureData::from_account_info(config_info)?;
@@ -126,6 +126,8 @@ pub fn process_configure(
 
     config_data.authority = args.authority;
     config_data.realy = realy.key.clone();
+    config_data.realy_vault = realy_vault.key.clone();
+    config_data.esrealy_vault = esrealy_vault.key.clone();
     config_data.max_supply = args.max_supply;
     config_data.serialize(&mut &mut config_info.data.borrow_mut()[..])?;
 
