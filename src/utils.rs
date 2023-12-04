@@ -221,13 +221,10 @@ pub fn spl_token_mint<'a>(
     token_program: &AccountInfo<'a>,
     payer_info: &AccountInfo<'a>,
     new_mint: &AccountInfo<'a>,
-    token_account: &AccountInfo<'a>,
     authority: &AccountInfo<'a>,
     create_account_seeds: &[&[u8]], // when account is not a pda, is null
     initialize_mint_seeds: &[&[u8]], // when account is not a pda, is null
-    mint_to_seeds: &[&[u8]],
     rent_info: &AccountInfo<'a>,
-    amt: u64,
 ) -> Result<(), ProgramError> {
     let size = spl_token::state::Account::LEN;
     let rent = &Rent::from_account_info(&rent_info)?;
@@ -263,8 +260,21 @@ pub fn spl_token_mint<'a>(
         ],
         &[initialize_mint_seeds],
     )?;
-    msg!("spl_token_mint_to mint");
+    Ok(())
+}
 
+
+#[inline(always)]
+pub fn spl_token_mint_to<'a>(
+    token_program: &AccountInfo<'a>,
+    new_mint: &AccountInfo<'a>,
+    token_account: &AccountInfo<'a>,
+    authority: &AccountInfo<'a>,
+    mint_to_seeds: &[&[u8]],
+    rent_info: &AccountInfo<'a>,
+    amt: u64,
+) -> Result<(), ProgramError> {
+    msg!("spl_token_mint_to mint");
     invoke_signed(
         &spl_token::instruction::mint_to(
             token_program.key,
@@ -287,7 +297,6 @@ pub fn spl_token_mint<'a>(
     msg!("spl_token_mint_to mint_to success");
     Ok(())
 }
-
 #[inline(always)]
 pub fn create_or_allocate_account_raw<'a>(
     program_id: Pubkey,
@@ -408,19 +417,4 @@ pub fn spl_token_transfer_invoke<'a>(
         )?,
         &[source, destination, authority, token_program],
     )
-}
-
-pub fn merkle_proof_verify(proof: Vec<[u8; 32]>, root: [u8; 32], leaf: [u8; 32]) -> bool {
-    let mut computed_hash = leaf;
-    for proof_element in proof.into_iter() {
-        if computed_hash <= proof_element {
-            // Hash(current computed hash + current element of the proof)
-            computed_hash = solana_program::keccak::hashv(&[&computed_hash, &proof_element]).0;
-        } else {
-            // Hash(current element of the proof + current computed hash)
-            computed_hash = solana_program::keccak::hashv(&[&proof_element, &computed_hash]).0;
-        }
-    }
-    // Check if the computed hash (root) is equal to the provided root
-    computed_hash == root
 }

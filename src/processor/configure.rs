@@ -70,6 +70,17 @@ pub fn process_configure(
             &rent_info,
         )?;
 
+        msg!("spl token initialize mint");
+        spl_token_mint(
+            token_program_info,
+            signer_info,
+            esrealy,
+            transfer_auth,
+            &[],
+            &[],
+            rent_info,
+        )?;
+
         //creat esrealy vault
         msg!("create esrealy vault");
         spl_token_create_account(
@@ -88,14 +99,12 @@ pub fn process_configure(
             &rent_info,
         )?;
 
-        spl_token_mint(
+        msg!("spl token mint to");
+        spl_token_mint_to(
             token_program_info,
-            signer_info,
             esrealy,
             esrealy_vault,
             transfer_auth,
-            &[],
-            &[],
             &authority_seed,
             rent_info,
             args.max_supply,
