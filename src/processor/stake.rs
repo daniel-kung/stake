@@ -19,7 +19,9 @@ pub fn process_stake(
     let receiver = next_account_info(account_info_iter)?;
     let config_info = next_account_info(account_info_iter)?;
     let transfer_auth = next_account_info(account_info_iter)?;
+    let realy = next_account_info(account_info_iter)?;
     let realy_vault = next_account_info(account_info_iter)?;
+    let esrealy = next_account_info(account_info_iter)?;
     let esrealy_vault = next_account_info(account_info_iter)?;
     let token_program_info = next_account_info(account_info_iter)?;
     let rent_info = next_account_info(account_info_iter)?;
@@ -31,9 +33,18 @@ pub fn process_stake(
     assert_eq_pubkey_1(&system_info, &solana_program::system_program::id())?;
 
     let mut config_data = ConfigureData::from_account_info(config_info)?;
-
+    let auth_bump = assert_transfer_authority(program_id, realy, esrealy, transfer_auth)?;
+    let authority_seed = [
+        program_id.as_ref(),
+        realy.key.as_ref(),
+        esrealy.key.as_ref(),
+        "transfer_auth".as_bytes(),
+        &[auth_bump],
+    ];
     assert_eq_pubkey(realy_vault, &config_data.realy_vault)?;
     assert_eq_pubkey(esrealy_vault, &config_data.esrealy_vault)?;
+    assert_eq_pubkey(realy, &config_data.realy)?;
+    assert_eq_pubkey(esrealy, &config_data.esrealy)?;
 
     //transfer realy to vault
     msg!("transfer realy to vault");
@@ -47,12 +58,13 @@ pub fn process_stake(
 
     //transfer esrealy to user
     msg!("transfer out esrealy");
-    spl_token_transfer_invoke(
+    spl_token_transfer(
         token_program_info.clone(),
         esrealy_vault.clone(),
         receiver.clone(),
         transfer_auth.clone(),
         args.amt,
+        &authority_seed,
     )?;
 
     config_data.supply += args.amt;
