@@ -122,12 +122,12 @@ pub fn process_configure(
         assert_owned_by(config_info, &program_id)?;
     } else {
         config_data.esrealy = esrealy.key.clone();
+        config_data.realy_vault = realy_vault.key.clone();
+        config_data.esrealy_vault = esrealy_vault.key.clone();
+        config_data.realy = realy.key.clone();
     }
-
+    
     config_data.authority = args.authority;
-    config_data.realy = realy.key.clone();
-    config_data.realy_vault = realy_vault.key.clone();
-    config_data.esrealy_vault = esrealy_vault.key.clone();
     config_data.max_supply = args.max_supply;
     config_data.serialize(&mut &mut config_info.data.borrow_mut()[..])?;
 
