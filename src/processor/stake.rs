@@ -31,6 +31,7 @@ pub fn process_stake(
     assert_signer(&signer_info)?;
     assert_eq_pubkey_0(&rent_info, &sysvar::rent::id())?;
     assert_eq_pubkey_1(&system_info, &solana_program::system_program::id())?;
+    assert_eq_pubkey_2(&token_program_info, &spl_token::id())?;
 
     let mut config_data = ConfigureData::from_account_info(config_info)?;
     let auth_bump = assert_transfer_authority(program_id, realy, esrealy, transfer_auth)?;
